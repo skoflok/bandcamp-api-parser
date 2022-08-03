@@ -7,7 +7,10 @@ import (
 )
 
 func main() {
-	fmt.Println("stat")
-	fmt.Println(bandcamp.Hell())
-	fmt.Println(bandcamp.NewQueryArgs(2).Encode())
+	q := bandcamp.NewQueryArgs(2)
+	r, e := bandcamp.FetchReleasesFromHome(q)
+	if e != nil {
+		fmt.Println(e)
+	}
+	fmt.Println(r.Items[0])
 }

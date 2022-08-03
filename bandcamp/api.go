@@ -1,12 +1,14 @@
 package bandcamp
 
 import (
-	"fmt"
+	"encoding/json"
+	"io"
+	"net/http"
 	"net/url"
 	"strconv"
 )
 
-const home_url = "https://bandcamp.com/api/discover/3/get_web"
+const homeUrl = "https://bandcamp.com/api/discover/3/get_web"
 
 type queryArgs struct {
 	g             string
@@ -19,10 +21,33 @@ type queryArgs struct {
 	lo_action_url string
 }
 
-func NewQueryArgs(page int) url.Values {
+type FeaturedTrack struct {
+	File     FeaturedTrackFile `json:"file"`
+	Duration float64           `json:"duration"`
+}
+
+type FeaturedTrackFile struct {
+	Link string `json:"mp3-128"`
+}
+
+type Release struct {
+	Type          string        `json:"type"`
+	Id            int           `json:"id"`
+	BandId        string        `json:"band_id"`
+	PublishDate   string        `json:"publish_date"`
+	Genre         string        `json:"genre_text"`
+	Album         string        `json:"primary_text"`
+	Artist        string        `json:"secondary_text"`
+	FeaturedTrack FeaturedTrack `json:"featured_track"`
+}
+
+type Releases struct {
+	Items []Release `json:"items"`
+}
+
+func NewQueryArgs(page int) *queryArgs {
 	q := &queryArgs{"all", "top", page, 0, "all", 0, true, "https://bandcamp.com"}
-	v := q.ToValues()
-	return v
+	return q
 }
 
 func (q *queryArgs) ToValues() url.Values {
@@ -39,5 +64,22 @@ func (q *queryArgs) ToValues() url.Values {
 }
 
 func (q *queryArgs) String() string {
-	return fmt.Sprintf("g=%s&s=%s&p=%d&gn=%d&f=%s&w=%d&lo=%t&lo_action_url=%s", q.g, q.s, q.p, q.gn, q.f, q.w, q.lo, q.lo_action_url)
+	return q.ToValues().Encode()
+}
+
+func FetchReleasesFromHome(q *queryArgs) (releases Releases, err error) {
+	url := homeUrl + "?" + q.ToValues().Encode()
+	resp, err := http.Get(url)
+	if err != nil {
+		// handle error
+	}
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
+
+	err = json.Unmarshal([]byte(body), &releases)
+	if err != nil {
+		return releases, err
+	}
+
+	return releases, err
 }
