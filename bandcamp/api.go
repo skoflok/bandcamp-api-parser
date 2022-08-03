@@ -76,7 +76,7 @@ func FetchReleasesFromHome(q *queryArgs) (releases Releases, err error) {
 	defer resp.Body.Close()
 	body, err := io.ReadAll(resp.Body)
 
-	err = json.Unmarshal([]byte(body), &releases)
+	err = json.Unmarshal(body, &releases)
 	if err != nil {
 		return releases, err
 	}
