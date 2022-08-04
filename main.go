@@ -3,12 +3,12 @@ package main
 import (
 	"fmt"
 
-	"github.com/skoflok/bandcamp_api_parser/bandcamp"
+	"github.com/skoflok/bandcamp_api_parser/api"
 )
 
 func main() {
-	q := bandcamp.NewQueryArgs(2)
-	r, e := bandcamp.FetchReleasesFromHome(q)
+	q := api.NewQueryArgs(2)
+	r, e := api.FetchReleasesFromHome(q)
 	if e != nil {
 		fmt.Println(e)
 	}

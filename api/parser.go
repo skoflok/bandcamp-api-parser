@@ -1,4 +1,4 @@
-package bandcamp
+package api
 
 import "fmt"
 
