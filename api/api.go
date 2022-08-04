@@ -34,7 +34,7 @@ type Release struct {
 	Type          string        `json:"type"`
 	Id            int           `json:"id"`
 	IsPreorder    int           `json:"is_preorder"`
-	BandId        string        `json:"band_id"`
+	BandId        int           `json:"band_id"`
 	PublishDate   string        `json:"publish_date"`
 	Genre         string        `json:"genre_text"`
 	Album         string        `json:"primary_text"`
