@@ -40,6 +40,12 @@ type Release struct {
 	Album         string        `json:"primary_text"`
 	Artist        string        `json:"secondary_text"`
 	FeaturedTrack FeaturedTrack `json:"featured_track"`
+	UrlHints      UrlHints      `json:"url_hints"`
+}
+
+type UrlHints struct {
+	Subdomain string `json:"subdomain"`
+	Slug      string `json:"Slug"`
 }
 
 type Releases struct {
